@@ -1,10 +1,10 @@
-import requests
 import time
 import json
 from datetime import datetime,timezone
 from dateutil import parser
 import os
 from dotenv import load_dotenv
+from security import safe_requests
 
 load_dotenv()
 
@@ -29,7 +29,7 @@ def get_all_topic_ids():
         url = f"{BASE_URL}/c/{CATEGORY_SLUG}/{CATEGORY_ID}.json?page={page}"
         print(f"Trying page {page}: {url}")
         try:
-            res = requests.get(url, headers=headers)
+            res = safe_requests.get(url, headers=headers)
             if res.status_code != 200:
                 print(f"Failed to fetch page {page} | Status code: {res.status_code}")
                 break
@@ -56,7 +56,7 @@ def fetch_topic_content(topic_id):
     url = f"{BASE_URL}/t/{topic_id}.json"
     print(f"Fetching topic {topic_id}...")
     try:
-        res = requests.get(url, headers=headers)
+        res = safe_requests.get(url, headers=headers)
         if res.status_code != 200:
             print(f"Failed to fetch topic {topic_id} | Status code: {res.status_code}")
             return None

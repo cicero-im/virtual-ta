@@ -17,6 +17,8 @@ from io import BytesIO
 from PIL import Image
 import pytesseract
 from dotenv import load_dotenv
+from security import safe_requests
+
 load_dotenv()
 
 AIPIPE_API_KEY = os.getenv("AIPIPE_API_KEY")
@@ -122,7 +124,7 @@ async def answer_query(query: QueryRequest):
         try:
             # Check if it's a URL or base64
             if query.image.startswith("http://") or query.image.startswith("https://"):
-                response = requests.get(query.image)
+                response = safe_requests.get(query.image)
                 image = Image.open(BytesIO(response.content))
             elif query.image.startswith("file://"):
                 local_path = query.image.replace("file://", "")
