@@ -98,7 +98,7 @@ def synthesize_answer(question: str, context_chunks: List[dict]) -> str:
         "temperature": 0.2
     }
 
-    response = requests.post(AIPIPE_LLM_URL, headers=HEADERS, json=payload)
+    response = requests.post(AIPIPE_LLM_URL, headers=HEADERS, json=payload, timeout=60)
 
     if response.ok:
         content = response.json()["choices"][0]["message"]["content"].strip()
@@ -122,7 +122,7 @@ async def answer_query(query: QueryRequest):
         try:
             # Check if it's a URL or base64
             if query.image.startswith("http://") or query.image.startswith("https://"):
-                response = requests.get(query.image)
+                response = requests.get(query.image, timeout=60)
                 image = Image.open(BytesIO(response.content))
             elif query.image.startswith("file://"):
                 local_path = query.image.replace("file://", "")
